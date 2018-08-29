@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -20,7 +21,8 @@ public class Calculadora extends JFrame {
 	private JTextField txtCampoDigitacao;
 	private double valor1;
 	private double valor2;
-	private String  operacao;
+	private String operacao;
+
 	public double getValor1() {
 		return valor1;
 	}
@@ -82,14 +84,23 @@ public class Calculadora extends JFrame {
 		JButton btnSoma = new JButton("+");
 		btnSoma.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Guarda o primeiro valor digitado
-				setValor1( Double.parseDouble(txtCampoDigitacao.getText()));
+				// Guarda o primeiro valor digitado
+				
+				String nome =  txtCampoDigitacao.getText();
+				if(matchesOnlyText(nome)) {
+					txtCampoDigitacao.setText("");
+				}else 
+				setValor1(Double.parseDouble(txtCampoDigitacao.getText()));
 
-				//Limpar o campo de valor digitado
+				// Limpar o campo de valor digitado
 				txtCampoDigitacao.setText("");
 
 				setOperacao(OPERACAO_SOMA);
-				}
+			}
+
+			public boolean matchesOnlyText(String text) {
+			    return text.matches("[^\\d]+");
+			}
 		});
 		btnSoma.setBounds(340, 51, 89, 23);
 		contentPane.add(btnSoma);
@@ -97,14 +108,14 @@ public class Calculadora extends JFrame {
 		JButton btnSubtra = new JButton("-");
 		btnSubtra.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Guarda o primeiro valor digitado
-				setValor1( Double.parseDouble(txtCampoDigitacao.getText()));
+				// Guarda o primeiro valor digitado
+				setValor1(Double.parseDouble(txtCampoDigitacao.getText()));
 
-				//Limpar o campo de valor digitado
+				// Limpar o campo de valor digitado
 				txtCampoDigitacao.setText("");
 
 				setOperacao(OPERACAO_SUB);
-				}
+			}
 		});
 		btnSubtra.setBounds(340, 85, 89, 23);
 		contentPane.add(btnSubtra);
@@ -112,14 +123,14 @@ public class Calculadora extends JFrame {
 		JButton btnDiv = new JButton("/");
 		btnDiv.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Guarda o primeiro valor digitado
-				setValor1( Double.parseDouble(txtCampoDigitacao.getText()));
+				// Guarda o primeiro valor digitado
+				setValor1(Double.parseDouble(txtCampoDigitacao.getText()));
 
-				//Limpar o campo de valor digitado
+				// Limpar o campo de valor digitado
 				txtCampoDigitacao.setText("");
 
 				setOperacao(OPERACAO_DIV);
-				}
+			}
 		});
 		btnDiv.setBounds(340, 150, 89, 23);
 		contentPane.add(btnDiv);
@@ -127,14 +138,14 @@ public class Calculadora extends JFrame {
 		JButton btnMult = new JButton("*");
 		btnMult.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Guarda o primeiro valor digitado
-				setValor1( Double.parseDouble(txtCampoDigitacao.getText()));
+				// Guarda o primeiro valor digitado
+				setValor1(Double.parseDouble(txtCampoDigitacao.getText()));
 
-				//Limpar o campo de valor digitado
+				// Limpar o campo de valor digitado
 				txtCampoDigitacao.setText("");
 
 				setOperacao(OPERACAO_MULT);
-				}
+			}
 		});
 		btnMult.setBounds(340, 116, 89, 23);
 		contentPane.add(btnMult);
@@ -144,21 +155,22 @@ public class Calculadora extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				setValor2(Double.parseDouble((txtCampoDigitacao.getText())));
 
-                String operacaoAtual = getOperacao();
+				String operacaoAtual = getOperacao();
 				switch (operacaoAtual) {
 				case OPERACAO_SOMA:
-					resultado = getValor1()+getValor2();
+					resultado = getValor1() + getValor2();
 					break;
 				case OPERACAO_SUB:
-					resultado = getValor1()-getValor2();
+					resultado = getValor1() - getValor2();
 					break;
 				case OPERACAO_MULT:
-					resultado = getValor1()*getValor2();
+					resultado = getValor1() * getValor2();
 					break;
 				case OPERACAO_DIV:
-					resultado = getValor1()/getValor2();
+					resultado = getValor1() / getValor2();
 					break;
 				default:
+				
 					break;
 				}
 
@@ -171,6 +183,8 @@ public class Calculadora extends JFrame {
 		JButton btnClear = new JButton("CE");
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				setValor1(0);
+				setValor2(0);
 				String valorTela = "";
 				txtCampoDigitacao.setText(valorTela);
 			}
@@ -191,7 +205,7 @@ public class Calculadora extends JFrame {
 		JButton btn2 = new JButton("2");
 		btn2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String valorTela = txtCampoDigitacao.getText() +2;
+				String valorTela = txtCampoDigitacao.getText() + 2;
 				txtCampoDigitacao.setText(valorTela);
 			}
 		});
