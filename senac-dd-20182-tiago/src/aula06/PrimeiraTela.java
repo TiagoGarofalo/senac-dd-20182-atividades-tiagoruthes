@@ -1,4 +1,4 @@
-package aula06.exercicio04;
+package aula06;
 
 import java.awt.EventQueue;
 
