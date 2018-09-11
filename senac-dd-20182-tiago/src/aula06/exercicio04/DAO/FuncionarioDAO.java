@@ -1,9 +1,10 @@
 package aula06.exercicio04.DAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import dao.Banco;
 import dao.BaseDAO;
 import aula06.exercicio04.VO.FuncionarioVO;
 
@@ -43,14 +44,14 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 	@Override
 	public String getValoresClausulaSetUpdate(FuncionarioVO entidade) {
 		// SET NOME=func.getNome(), MATRICULA=func.getNumeroMatricula()...
-		String clausulaSet = " NOME = ?, MATRICULA = ?, CPF = ?"; 
-		
+		String clausulaSet = " NOME = ?, MATRICULA = ?, CPF = ?";
+
 		return clausulaSet;
 	}
-	
+
 	@Override
-	public void setValoresAtributosUpdate(FuncionarioVO entidade, PreparedStatement preparedStmt){
-		//Preenche cada interrogação da cláusula SET
+	public void setValoresAtributosUpdate(FuncionarioVO entidade, PreparedStatement preparedStmt) {
+		// Preenche cada interrogação da cláusula SET
 		try {
 			preparedStmt.setString(1, entidade.getNome());
 			preparedStmt.setString(2, entidade.getNumeroMatricula());
@@ -62,8 +63,8 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 
 	@Override
 	public FuncionarioVO construirObjetoDoResultSet(ResultSet resultado) {
-		
-		FuncionarioVO novoFuncionario = null; //retorna null caso o resultado esteja vazio
+
+		FuncionarioVO novoFuncionario = null; // retorna null caso o resultado esteja vazio
 		try {
 			novoFuncionario = new FuncionarioVO();
 			novoFuncionario.setIdFuncionario(resultado.getInt("ID"));
@@ -73,7 +74,7 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return novoFuncionario;
 	}
 
@@ -83,8 +84,61 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 	}
 
 	public boolean atualizar(FuncionarioVO funcionarioVO) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean sucessoUpdate = false;
+
+		String sql = "  UPDATE FUNCIONARIO F SET ID=?, NOME=?, MATRICULA=?, CPF=?  "
+				+ "  WHERE F.ID = ?  ";
+
+		Connection conexao = Banco.getConnection();
+		PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql);
+
+		try {
+			prepStmt.setInt(1, funcionarioVO.getIdFuncionario());
+			prepStmt.setString(2, funcionarioVO.getNome());
+			prepStmt.setString(3, funcionarioVO.getNumeroMatricula());
+			prepStmt.setString(4, funcionarioVO.getCpf());
+
+			int codigoRetorno = prepStmt.executeUpdate();
+
+			if(codigoRetorno == 1){
+				sucessoUpdate = true;
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Erro ao atualizar produto");
+		}finally{
+			Banco.closePreparedStatement(prepStmt);
+			Banco.closeConnection(conexao);
+		}
+
+		return sucessoUpdate;
+
 	}
+
+	/*public ArrayList<FuncionarioVO> listarTodos() {
+		String sql = " SELECT * FROM FUNCIONARIO ";
+
+		Connection conexao = Banco.getConnection();
+		PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql);
+		ArrayList<FuncionarioVO> funcionarios = new ArrayList<FuncionarioVO>();
+
+		try {
+			ResultSet result = prepStmt.executeQuery();
+
+			while (result.next()) {
+				FuncionarioVO f = new FuncionarioVO();
+
+				// Obtendo valores pelo NOME DA COLUNA
+				f.setIdFuncionario(result.getInt("ID"));
+				f.setNome(result.getString("NOME"));
+				f.setNumeroMatricula(result.getString("MATRICULA"));
+				f.setCpf(result.getString("CPF"));
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return funcionarios;
+	}*/
 
 }

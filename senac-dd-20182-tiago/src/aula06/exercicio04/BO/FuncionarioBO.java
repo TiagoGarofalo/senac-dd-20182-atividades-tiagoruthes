@@ -1,5 +1,7 @@
 package aula06.exercicio04.BO;
 
+import java.sql.SQLException;
+
 import aula06.exercicio04.DAO.FuncionarioDAO;
 import aula06.exercicio04.VO.FuncionarioVO;
 
@@ -19,4 +21,20 @@ public class FuncionarioBO {
 		return sucesso;
 	}
 	
+	public boolean excluir(int idEntidade) {
+		boolean sucesso = false;
+		try {
+			sucesso = dao.excluir(idEntidade);
+		} catch (SQLException e) {
+			// TODO tratar melhor a mensagem
+			e.printStackTrace();
+		}
+		return sucesso;
+	}
+	
+	/*public List<FuncionarioVO> listarFuncionario() {
+		ArrayList<FuncionarioVO> funcionarioVO = dao.listarTodos();
+		return funcionarioVO;
+	}*/
+		
 }
