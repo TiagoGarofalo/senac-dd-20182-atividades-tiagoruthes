@@ -66,11 +66,11 @@ public class Excluir extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//Pegar o id digitado
-				String idDigitado = textField.getText();
+				String cpfDigitado = textField.getText();
 				//Instanciar um controlador
 				FuncionarioController controller = new FuncionarioController();
 				//Mandar o controlador excluir o Funcionario com o id digitado
-				String msg = controller.excluir(idDigitado);
+				String msg = controller.excluir(cpfDigitado);
 				//Pegar uma mensagem de retorno do controlador e mostrar na tela
 				JOptionPane.showMessageDialog(null, msg);
 			}

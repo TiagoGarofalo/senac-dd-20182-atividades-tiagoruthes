@@ -13,28 +13,29 @@ public class FuncionarioBO {
 		return idGerado > 0;
 	}
 	public FuncionarioVO buscarFuncionarioVOPorId(String textoId) {
-		FuncionarioVO funcionarioVOBuscado = dao.obterPorId(Integer.parseInt(textoId));
+		FuncionarioVO funcionarioVOBuscado = null;
+		try {
+			funcionarioVOBuscado = dao.pesquisarPorId(Integer.parseInt(textoId));
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+		}
 		return funcionarioVOBuscado;
 	}
 	public boolean atualizar(FuncionarioVO funcionarioVO) {
 		boolean sucesso = dao.atualizar(funcionarioVO);
 		return sucesso;
 	}
-	
-	public boolean excluir(int idEntidade) {
+
+	public boolean excluir(int cpfEntidade) {
 		boolean sucesso = false;
-		try {
-			sucesso = dao.excluir(idEntidade);
-		} catch (SQLException e) {
-			// TODO tratar melhor a mensagem
-			e.printStackTrace();
-		}
+		sucesso = dao.excluir(cpfEntidade);
+		
 		return sucesso;
 	}
-	
+
 	/*public List<FuncionarioVO> listarFuncionario() {
 		ArrayList<FuncionarioVO> funcionarioVO = dao.listarTodos();
 		return funcionarioVO;
 	}*/
-		
+
 }

@@ -6,7 +6,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import aula06.exercicio04.VO.FuncionarioVO;
+import aula06.exercicio04.controller.FuncionarioController;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -18,7 +23,9 @@ public class Inserir extends JFrame {
 	private JTextField txfNome;
 	private JTextField txfCPF;
 	private JTextField txfPesquisar;
-	private JTextField textField;
+	private JTextField textMat;
+
+	private FuncionarioVO funcionario = new FuncionarioVO();
 
 	/**
 	 * Launch the application.
@@ -47,58 +54,93 @@ public class Inserir extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JLabel lbInserirFunc = new JLabel("Inserir Funcionário");
-		lbInserirFunc.setBounds(5, 5, 150, 14);
+		lbInserirFunc.setBounds(22, 5, 150, 14);
 		contentPane.add(lbInserirFunc);
-		
+
 		txfNome = new JTextField();
-		txfNome.setBounds(56, 100, 259, 20);
+		txfNome.setBounds(91, 112, 279, 20);
 		contentPane.add(txfNome);
 		txfNome.setColumns(10);
-		
+
 		JLabel lbnome = new JLabel("Nome");
-		lbnome.setBounds(5, 100, 46, 14);
+		lbnome.setBounds(22, 112, 46, 14);
 		contentPane.add(lbnome);
-		
+
 		JLabel lbCPF = new JLabel("CPF");
-		lbCPF.setBounds(5, 134, 46, 14);
+		lbCPF.setBounds(22, 145, 46, 14);
 		contentPane.add(lbCPF);
-		
+
 		txfCPF = new JTextField();
-		txfCPF.setBounds(56, 131, 259, 20);
+		txfCPF.setBounds(91, 143, 279, 20);
 		contentPane.add(txfCPF);
 		txfCPF.setColumns(10);
-		
+
 		JButton btSalvar = new JButton("Salvar");
-		btSalvar.setBounds(247, 161, 69, 23);
+		btSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				FuncionarioController controlador = new FuncionarioController();
+				FuncionarioVO funcionario = construirFuncionario();
+
+				String mensagem = controlador.salvar(funcionario);
+				JOptionPane.showMessageDialog(null, mensagem);
+				limparTela();
+			}
+
+			private void limparTela() {
+
+				funcionario = new FuncionarioVO();
+				txfNome.setText("");
+				txfCPF.setText("");
+				textMat.setText("");
+
+			}
+		});
+		btSalvar.setBounds(270, 173, 100, 23);
 		contentPane.add(btSalvar);
-		
+
 		txfPesquisar = new JTextField();
-		txfPesquisar.setBounds(87, 35, 143, 20);
+		txfPesquisar.setBounds(116, 35, 143, 20);
 		contentPane.add(txfPesquisar);
 		txfPesquisar.setColumns(10);
-		
+
 		JLabel lbPesquisar = new JLabel("Pesquisar CPF");
-		lbPesquisar.setBounds(5, 38, 72, 14);
+		lbPesquisar.setBounds(22, 37, 89, 14);
 		contentPane.add(lbPesquisar);
-		
+
 		JButton btPesquisar = new JButton("Pesquisar");
 		btPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
+				// TODO botao pesquisar
+
 			}
 		});
-		btPesquisar.setBounds(236, 34, 79, 23);
+		btPesquisar.setBounds(270, 34, 100, 23);
 		contentPane.add(btPesquisar);
-		
-		textField = new JTextField();
-		textField.setBounds(56, 69, 259, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
+
+		textMat = new JTextField();
+		textMat.setBounds(91, 81, 279, 20);
+		contentPane.add(textMat);
+		textMat.setColumns(10);
+
 		JLabel lbmatricula = new JLabel("Matricula");
-		lbmatricula.setBounds(5, 72, 46, 14);
+		lbmatricula.setBounds(22, 81, 70, 14);
 		contentPane.add(lbmatricula);
+
+		JButton btAtualizar = new JButton("Atualizar");
+		btAtualizar.setBounds(271, 204, 100, 23);
+		contentPane.add(btAtualizar);
+	}
+
+	protected FuncionarioVO construirFuncionario() {
+		FuncionarioVO novoFunc = new FuncionarioVO();
+		novoFunc.setCpf(txfCPF.getText());
+		novoFunc.setNumeroMatricula(textMat.getText());
+		novoFunc.setNome(txfNome.getText());
+
+		return novoFunc;
 	}
 }

@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import dao.Banco;
 import dao.BaseDAO;
 import aula06.exercicio04.VO.FuncionarioVO;
@@ -78,25 +82,20 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 		return novoFuncionario;
 	}
 
-	public FuncionarioVO obterPorId(int parseInt) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean atualizar(FuncionarioVO funcionarioVO) {
+	public boolean atualizar(FuncionarioVO f) {
 		boolean sucessoUpdate = false;
 
-		String sql = "  UPDATE FUNCIONARIO F SET ID=?, NOME=?, MATRICULA=?, CPF=?  "
+		String sql = "  UPDATE FUNCIONARIO F SET, NOME=?, MATRICULA=?, CPF=?  "
 				+ "  WHERE F.ID = ?  ";
 
 		Connection conexao = Banco.getConnection();
 		PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql);
 
 		try {
-			prepStmt.setInt(1, funcionarioVO.getIdFuncionario());
-			prepStmt.setString(2, funcionarioVO.getNome());
-			prepStmt.setString(3, funcionarioVO.getNumeroMatricula());
-			prepStmt.setString(4, funcionarioVO.getCpf());
+			
+			prepStmt.setString(1, f.getNome());
+			prepStmt.setString(2, f.getNumeroMatricula());
+			prepStmt.setString(3, f.getCpf());
 
 			int codigoRetorno = prepStmt.executeUpdate();
 
@@ -105,7 +104,7 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("Erro ao atualizar produto");
+			JOptionPane.showMessageDialog(null,"Erro ao atualizar produto");
 		}finally{
 			Banco.closePreparedStatement(prepStmt);
 			Banco.closeConnection(conexao);
@@ -114,8 +113,35 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 		return sucessoUpdate;
 
 	}
+	
+	public boolean excluir(int cpf){
+		boolean sucessoDelete = false;
 
-	/*public ArrayList<FuncionarioVO> listarTodos() {
+		String sql = " DELETE FROM FUNCIONARIO "
+				+ " WHERE CPF = ? ";
+
+		Connection conexao = Banco.getConnection();
+		PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql);
+
+		try {
+			prepStmt.setInt(1, cpf);
+
+			int codigoRetorno = prepStmt.executeUpdate();
+
+			if(codigoRetorno == 1){//1 - sucesso na execução
+				sucessoDelete = true;
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Erro ao remover funcionário. CPF = " + cpf);
+		}finally{
+			Banco.closePreparedStatement(prepStmt);
+			Banco.closeConnection(conexao);
+		}
+		return sucessoDelete;
+	}
+
+	public ArrayList<FuncionarioVO> listarTodos() {
 		String sql = " SELECT * FROM FUNCIONARIO ";
 
 		Connection conexao = Banco.getConnection();
@@ -139,6 +165,6 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 			e.printStackTrace();
 		}
 		return funcionarios;
-	}*/
+	}
 
 }
