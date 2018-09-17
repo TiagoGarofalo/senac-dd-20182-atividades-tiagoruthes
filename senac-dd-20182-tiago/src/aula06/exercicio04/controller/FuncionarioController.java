@@ -60,9 +60,27 @@ public class FuncionarioController {
 				validacao += "- Nome é obrigatório \n";
 			}
 			if(funcionario.getCpf().trim().equals("")) {
-				validacao += "- Fabricante é obrigatório \n";
+				validacao += "- CPF é obrigatório \n";
 			}
 		}
+		return validacao;
+	}
+
+	public String atualizar(FuncionarioVO funcionario) {
+		String validacao = validarFuncionario(funcionario);
+
+		if(validacao == "") {
+			if(funcionario.getCpf() != "") {
+				//INSERT
+				if(bo.atualizar(funcionario)) {
+					validacao = "funcionario atualizado com sucesso!";
+				}else {
+					validacao = "Erro ao atualizar funcionario";
+				
+				}
+			}
+		}
+
 		return validacao;
 	}
 	

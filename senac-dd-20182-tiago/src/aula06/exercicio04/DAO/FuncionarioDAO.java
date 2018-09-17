@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -82,11 +83,68 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 		return novoFuncionario;
 	}
 
-	public boolean atualizar(FuncionarioVO f) {
+	public boolean temCPFCadastrado(String cpf) {
+		String sql = "SELECT COUNT(*) FROM FUNCIONARIO WHERE CPF = ?";
+		boolean temFuncionarioComEsseCPF = false;
+		
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+		ResultSet resultado = null;
+		try{
+			stmt.setString(1, cpf);
+			resultado = stmt.executeQuery();
+			while(resultado.next()){
+				int quantidadeRegistros = resultado.getInt(1);
+				temFuncionarioComEsseCPF = (quantidadeRegistros > 0);
+			}
+		} catch (SQLException e){
+			System.out.println("Erro ao consultar o CPF = " + cpf);
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return temFuncionarioComEsseCPF;
+	}
+
+	public boolean atualizar(FuncionarioVO funcionarioVO) {
+
 		boolean sucessoUpdate = false;
 
-		String sql = "  UPDATE FUNCIONARIO F SET, NOME=?, MATRICULA=?, CPF=?  "
-				+ "  WHERE F.ID = ?  ";
+		String sql = "UPDATE funcionario SET NOME=?, MATRICULA=?, CPF = ?" + " WHERE CPF = ? ";
+
+		Connection conexao = Banco.getConnection();
+		PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql);
+		
+		try {
+			
+						
+			prepStmt.setString(1,  funcionarioVO.getNome());
+			prepStmt.setString(2,  funcionarioVO.getNumeroMatricula());
+			prepStmt.setString(3,  funcionarioVO.getCpf());
+			prepStmt.setString(4,  funcionarioVO.getCpf());
+			int codigoRetorno = prepStmt.executeUpdate();
+			
+
+			if(codigoRetorno == 1){
+				sucessoUpdate = true;
+			}
+			
+
+		}catch (SQLException e) {
+			JOptionPane.showMessageDialog(null,"Erro ao atualizar funcionario");
+		}finally{
+			Banco.closePreparedStatement(prepStmt);
+			Banco.closeConnection(conexao);
+		}
+	
+		return sucessoUpdate;
+}
+	/*public boolean atualizar(FuncionarioVO f) {
+		boolean sucessoUpdate = false;
+
+		String sql = "  UPDATE FUNCIONARIO SET, NOME=?, MATRICULA=?  "
+				+ "  WHERE CPF = ?  ";
 
 		Connection conexao = Banco.getConnection();
 		PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql);
@@ -104,7 +162,7 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 			}
 
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null,"Erro ao atualizar produto");
+			JOptionPane.showMessageDialog(null,"Erro ao atualizar funcionario");
 		}finally{
 			Banco.closePreparedStatement(prepStmt);
 			Banco.closeConnection(conexao);
@@ -112,7 +170,7 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 
 		return sucessoUpdate;
 
-	}
+	}*/
 	
 	public boolean excluir(int cpf){
 		boolean sucessoDelete = false;
@@ -141,7 +199,36 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 		return sucessoDelete;
 	}
 
-	public ArrayList<FuncionarioVO> listarTodos() {
+	public FuncionarioVO pesquisarPorCPF(int cpf){
+		String sql = " SELECT * FROM FUNCIONARIO WHERE CPF= ? " ;
+		
+		Connection conexao = Banco.getConnection();
+		PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql);
+		FuncionarioVO f = null;
+		
+		try {
+			prepStmt.setInt(1, cpf);
+			ResultSet result = prepStmt.executeQuery();
+			
+			while(result.next()){
+				f = new FuncionarioVO();
+				
+				//Obtendo valores pelo NOME DA COLUNA
+				f.setNome(result.getString("NOME"));
+				f.setNumeroMatricula(result.getString("MATRICULA"));
+				f.setCpf(result.getString("CPF"));
+				
+				//JOptionPane.showMessageDialog(null, "Funcionario Pesquisado: " + f);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Erro ao consultar funcionário. CPF = " + cpf);
+		}
+		return  f;
+	}
+	
+	
+	/*public ArrayList<FuncionarioVO> listarTodos() {
 		String sql = " SELECT * FROM FUNCIONARIO ";
 
 		Connection conexao = Banco.getConnection();
@@ -165,6 +252,6 @@ public class FuncionarioDAO extends BaseDAO<FuncionarioVO> {
 			e.printStackTrace();
 		}
 		return funcionarios;
-	}
+	}*/
 
 }

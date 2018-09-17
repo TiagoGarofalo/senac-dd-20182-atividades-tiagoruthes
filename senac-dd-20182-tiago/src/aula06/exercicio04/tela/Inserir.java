@@ -7,9 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import aula06.exercicio04.BO.FuncionarioBO;
+import aula06.exercicio04.DAO.FuncionarioDAO;
 import aula06.exercicio04.VO.FuncionarioVO;
 import aula06.exercicio04.controller.FuncionarioController;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -26,6 +27,7 @@ public class Inserir extends JFrame {
 	private JTextField textMat;
 
 	private FuncionarioVO funcionario = new FuncionarioVO();
+	private FuncionarioBO bo = new FuncionarioBO();
 
 	/**
 	 * Launch the application.
@@ -113,9 +115,12 @@ public class Inserir extends JFrame {
 		JButton btPesquisar = new JButton("Pesquisar");
 		btPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				// TODO botao pesquisar
-
+					
+				
+				funcionario = bo.pesquisarPorCPF(txfPesquisar.getText());
+				txfNome.setText(funcionario.getNome());
+				textMat.setText(funcionario.getNumeroMatricula());
+				txfCPF.setText(funcionario.getCpf());
 			}
 		});
 		btPesquisar.setBounds(270, 34, 100, 23);
@@ -131,6 +136,28 @@ public class Inserir extends JFrame {
 		contentPane.add(lbmatricula);
 
 		JButton btAtualizar = new JButton("Atualizar");
+		btAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				FuncionarioController controlador = new FuncionarioController();
+				FuncionarioVO funcionario = construirFuncionario();
+
+				String mensagem = controlador.atualizar(funcionario);
+				JOptionPane.showMessageDialog(null, mensagem);
+				limparTela();
+				
+			}
+
+			private void limparTela() {
+
+					funcionario = new FuncionarioVO();
+					txfNome.setText("");
+					txfCPF.setText("");
+					textMat.setText("");
+
+				}
+				
+		});
 		btAtualizar.setBounds(271, 204, 100, 23);
 		contentPane.add(btAtualizar);
 	}
@@ -143,4 +170,14 @@ public class Inserir extends JFrame {
 
 		return novoFunc;
 	}
+	
+	protected String construirFuncionarioPesq() {
+		String novoFunc ="";
+		novoFunc = txfPesquisar.getText();
+		
+		return novoFunc;
+	}
+	
+	
+	
 }

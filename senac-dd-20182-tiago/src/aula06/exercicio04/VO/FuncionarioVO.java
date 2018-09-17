@@ -51,6 +51,12 @@ public class FuncionarioVO {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+
+	@Override
+	public String toString() {
+		return " \n idFuncionario=" + idFuncionario + " \n nome=" + nome + " \n numeroMatricula="
+				+ numeroMatricula + " \n cpf=" + cpf ;
+	}
 	
 	
 	
